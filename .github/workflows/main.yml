@@ -1,0 +1,29 @@
+name: Daily Repository Update
+
+on:
+  schedule:
+    - cron: '17 5 * * *'   # Runs daily at 05:17 UTC
+  workflow_dispatch:
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Git
+        run: |
+          git config user.name "DevSync Automation"
+          git config user.email "agrawalpratham0222@gmail.com"
+
+      - name: Update timestamp file - agrawalpratham0222@gmail.com
+        run: |
+          echo "Last updated on $(date)" >> daily-log.txt
+
+      - name: Commit and Push Changes
+        run: |
+          git add daily-log.txt
+          git commit -m "Automated daily update: $(date)" || echo "No changes to commit"
+          git push
